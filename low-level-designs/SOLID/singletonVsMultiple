@@ -39,12 +39,12 @@ You can shard or partition your data structures (order books per stock) to reduc
 
 Or adopt an event-driven architecture where orders are queued and processed by a thread pool, but the core matching engine remains a single logical component ensuring consistency.
 
-TL;DR
-Scenario	Multiple Instances	Singleton Instance
-Lots of independent orders	May run faster, but risk data conflicts	Serializes or synchronizes shared access
-Shared state mutation	Hard to maintain consistency	Easier to keep consistent and atomic
-Correctness critical	Risk of bugs, inconsistent portfolio balances	Safer, predictable trade processing
-Performance optimization	Use concurrency carefully with partitioning/sharding	Simplifies synchronization but can be bottleneck
+| Scenario                   | Multiple Instances                                   | Singleton Instance                               |
+| -------------------------- | ---------------------------------------------------- | ------------------------------------------------ |
+| Lots of independent orders | May run faster, but risk data conflicts              | Serializes or synchronizes shared access         |
+| Shared state mutation      | Hard to maintain consistency                         | Easier to keep consistent and atomic             |
+| Correctness critical       | Risk of bugs, inconsistent portfolio balances        | Safer, predictable trade processing              |
+| Performance optimization   | Use concurrency carefully with partitioning/sharding | Simplifies synchronization but can be bottleneck |
 
 In your app’s context:
 OrderProcessor singleton helps ensure all orders are processed consistently, even if it serializes some parts.
