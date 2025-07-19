@@ -1,0 +1,57 @@
+> let say I dont make it singleton then multiple instances of OrderProcessor and TradeMatching can be created,
+wont it make my process faster to execute then why we will define a singleton class at all at place ?
+
+Why NOT having Singleton for something like OrderProcessor or TradeMatchingEngine might seem faster?
+Multiple instances can handle different orders in parallel without waiting on a single shared object.
+
+This can improve throughput and reduce contention in highly concurrent systems.
+
+You might think: “More instances = more threads processing independently = faster.”
+
+BUT... here’s why Singleton or shared instance often wins for these specific classes:
+1. Shared mutable state and data integrity
+These classes interact with shared resources like the OrderBook, portfolios, and trades.
+
+If multiple OrderProcessor instances act independently, they might conflict when accessing/modifying shared data (e.g., order book updates, portfolios).
+
+Without proper synchronization, it can cause race conditions, inconsistent state, lost updates.
+
+2. Complex synchronization requirements
+You’d need complex locking or concurrent data structures everywhere to keep data consistent.
+
+That can actually degrade performance and increase bugs.
+
+Using a single instance centralizes synchronization and coordination, which can be easier to reason about.
+
+3. Maintaining correctness over raw speed
+In finance or stock broker apps, correctness and consistency are critical — e.g., you can’t sell stocks you don’t have or buy beyond your balance.
+
+So often, it’s more important that trades are processed correctly and atomically rather than just as fast as possible.
+
+How to get both correctness and concurrency?
+Use Singleton with careful synchronization on shared state, e.g., synchronized methods or locks in OrderProcessor.
+
+Or better, make the shared mutable state thread-safe (concurrent collections, atomic variables).
+
+You can still process multiple orders in parallel if those orders don’t conflict (e.g., different stocks or different investors).
+
+You can shard or partition your data structures (order books per stock) to reduce contention.
+
+Or adopt an event-driven architecture where orders are queued and processed by a thread pool, but the core matching engine remains a single logical component ensuring consistency.
+
+TL;DR
+Scenario	Multiple Instances	Singleton Instance
+Lots of independent orders	May run faster, but risk data conflicts	Serializes or synchronizes shared access
+Shared state mutation	Hard to maintain consistency	Easier to keep consistent and atomic
+Correctness critical	Risk of bugs, inconsistent portfolio balances	Safer, predictable trade processing
+Performance optimization	Use concurrency carefully with partitioning/sharding	Simplifies synchronization but can be bottleneck
+
+In your app’s context:
+OrderProcessor singleton helps ensure all orders are processed consistently, even if it serializes some parts.
+
+You can still process many orders concurrently if you shard order books or use concurrent queues internally.
+
+Singleton doesn’t prevent concurrency; it just controls the shared logic and coordination point.
+
+Final thought
+Singleton does not mean your whole system is single-threaded or slow. It means the core logic instance is single, and you design concurrency around it safely.
