@@ -1,0 +1,56 @@
+Singleton Design Pattern – When to Use / Not Use
+
+✅ When to Use Singleton
+1. Global Access Required
+    * The instance must be accessible from anywhere in the application.
+    * Example: Logging service (Logger), configuration manager.
+2. Stateless or Immutable Behavior
+    * Singleton is safe when the object does not hold mutable state that changes per user/session.
+    * Example: NotificationService that only sends messages.
+3. Single Point of Coordination
+    * When one object should manage a global resource or orchestrate actions consistently.
+    * Example: MeetingService (orchestrator for scheduling/canceling meetings).
+4. Resource Intensive Objects
+    * If instantiating an object is costly, Singleton avoids repeated construction.
+    * Example: Database connection pool, thread pool manager.
+5. Controlling Shared Resources
+    * Singleton ensures that only one instance interacts with a critical shared resource.
+    * Example: File manager, system registry handler.
+6. Lazy Initialization
+    * When you want to create the instance only when it is first needed.
+    * Example: Lazy-loaded caches or deferred loggers.
+
+❌ When NOT to Use Singleton
+1. Stateful Per User/Request
+    * If the class holds state specific to a user, session, or request, Singleton causes shared state issues.
+    * Example: ShoppingCart, UserSession, TransactionContext.
+2. Scalability / Distributed Systems
+    * Singleton is limited to one JVM. In a multi-node or microservices setup, you can’t enforce a true singleton across nodes.
+    * Example: Stateless services like MeetingService in a distributed system.
+3. Testability / Mocking Challenges
+    * Singletons introduce hidden global dependencies, making unit testing and mocking difficult.
+    * Example: Complex business services with external dependencies.
+4. Multiple Configurations Needed
+    * If you may need multiple instances with different configurations, Singleton is restrictive.
+    * Example: EmailService with different SMTP configs per tenant.
+5. Overuse Can Lead to Anti-pattern
+    * Using Singleton everywhere leads to tight coupling, global state, and hidden dependencies.
+    * Example: Making all services Singletons in a monolithic app is not good practice.
+6. Concurrency Concerns for Stateful Singletons
+    * If Singleton holds mutable state, you need proper synchronization, otherwise it can cause thread-safety issues.
+    * Example: Singleton cache or queue manager with shared mutable data.
+
+💡 Practical Examples
+
+| Class / Service                | Singleton? | Reason                                                                  |
+| ------------------------------ | ---------- | ----------------------------------------------------------------------  |
+| Logger                         | ✅ Yes      | Global, stateless, cheap access everywhere                             |
+| NotificationService            | ✅ Yes      | Centralized orchestration, stateless                                   |
+| MeetingService (stateless)     | ✅ Optional | Central orchestration; safe as singleton, can refactor later if needed |
+| Calendar                       | ❌ No       | Holds user-specific meetings (stateful)                                |
+| UserService                    | ❌ No       | Manages per-user state                                                 |
+| ShoppingCart                   | ❌ No       | Session-specific, stateful                                             |
+| ConfigurationManager           | ✅ Yes      | Global config, read-only or immutable                                  |
+| Database Connection Pool       | ✅ Yes      | Single resource manager for DB connections                             |
+| CacheManager (per application) | ✅ Yes      | Shared cache, centralized access                                       |
+| PaymentTransactionManager      | ❌ No       | Stateful per transaction/session                                       |
