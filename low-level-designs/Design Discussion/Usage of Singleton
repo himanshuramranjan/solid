@@ -54,3 +54,13 @@ Singleton Design Pattern – When to Use / Not Use
 | Database Connection Pool       | ✅ Yes      | Single resource manager for DB connections                             |
 | CacheManager (per application) | ✅ Yes      | Shared cache, centralized access                                       |
 | PaymentTransactionManager      | ❌ No       | Stateful per transaction/session                                       |
+
+> Best way to implement the Singleton Design Pattern
+
+🔹 Comparison Table
+| Approach                    | Lazy?  | Thread-Safe?  | Performance  | Code Complexity  |
+| --------------------------- | -----  | ------------  | -----------  | ---------------- |
+| Eager Initialization        | ❌ No  | ✅ Yes        | ✅ High      | ✅ Simple         |
+| Synchronized Method         | ✅ Yes | ✅ Yes        | ❌ Slow      | ✅ Simple         |
+| Double-Checked Locking      | ✅ Yes | ✅ Yes        | ✅ Faster    | ❌ Complex        |
+| Bill Pugh (Inner Class)     | ✅ Yes | ✅ Yes        | ✅ High      | ✅ Simple & Clean |
